@@ -11,6 +11,7 @@ function App() {
         const game = new Game(gameContainerRef.current!)
         gameRef.current = game
         game.setup()
+        game.loop()
 
         return () => {
             game.destroy()
