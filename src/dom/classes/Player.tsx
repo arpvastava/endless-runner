@@ -1,7 +1,8 @@
-import { BoxGeometry, Mesh, MeshStandardMaterial, Scene } from "three";
+import { Box3, BoxGeometry, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
 
 export class Player {
     player: Mesh | null = null
+    boundingBox: Box3 | null = null
     scene: Scene
 
     moveDistance: number = 2
@@ -13,6 +14,7 @@ export class Player {
     }
 
     setup() {
+        // Create player
         const geometry = new BoxGeometry(1, 1, 1)
         const material = new MeshStandardMaterial({ color: "#ff6969" })
 
@@ -21,19 +23,29 @@ export class Player {
 
         this.scene.add(this.player)
 
+        // Create bounding box
+        this.boundingBox = new Box3().setFromObject(this.player)
+
         // Add player movement
         window.addEventListener("keydown", this.onKeyPress)
     }
 
     update(delta: number) {
-        if (!this.player)
+        if (!this.player || !this.boundingBox)
             return
 
+        // Movement
         this.player.position.x += (this.targetX - this.player.position.x) * this.speed * delta
+
+        // Update bounding box position
+        this.boundingBox.setFromCenterAndSize(
+            this.player.position,
+            this.boundingBox.getSize(new Vector3())
+        )
     }
 
     destroy() {
-        if (!this.player)
+        if (!this.player || !this.boundingBox)
             return
 
         // Remove event listeners
@@ -42,6 +54,7 @@ export class Player {
         // Clear main reference beforehand
         const p = this.player
         this.player = null
+        this.boundingBox = null // Can be freed by directly setting it to null
 
         // Clear out geometry and material
         p.geometry.dispose()

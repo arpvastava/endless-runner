@@ -68,7 +68,7 @@ export class ObstaclesManager {
         this.lastObPos = newPos
 
         // Create obstacle
-        const obstacle = new Obstacle(this.scene)
+        const obstacle = new Obstacle(this.scene, this.player)
         obstacle.setup(newPos)
 
         // Add to obstacles list
