@@ -1,6 +1,8 @@
 import { Box3, BoxGeometry, Mesh, MeshStandardMaterial, Scene, Vector3 } from "three";
 
 export class Player {
+    isActive: boolean = false
+
     player: Mesh | null = null
     boundingBox: Box3 | null = null
     scene: Scene
@@ -28,6 +30,12 @@ export class Player {
 
         // Add player movement
         window.addEventListener("keydown", this.onKeyPress)
+
+        // Reset values
+        this.targetX = 0
+
+        // Set status to active
+        this.isActive = true
     }
 
     update(delta: number) {
@@ -68,6 +76,9 @@ export class Player {
 
         // Remove from scene
         this.scene.remove(p)
+
+        // Set status to inactive
+        this.isActive = false
     }
 
     private onKeyPress = (e: KeyboardEvent) => {

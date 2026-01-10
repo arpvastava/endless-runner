@@ -1,4 +1,4 @@
-type GameState = "startMenu" | "playing" | "paused" | "resultMenu"
+export type GameState = "startMenu" | "playing" | "paused" | "resultMenu"
 
 type GameEvents = {
     stateChange: GameState

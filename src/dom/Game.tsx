@@ -3,6 +3,7 @@ import { Player } from "./classes/Player"
 import { Ground } from "./classes/Ground"
 import { ObstaclesManager } from "./classes/ObstaclesManager"
 import { StateManager } from "../state"
+import type { GameState } from "../state/StateManager"
 
 export class Game {
     private stateManager: StateManager
@@ -94,6 +95,9 @@ export class Game {
 
         // Render
         this.renderer.render(this.scene, this.camera)
+
+        // Events handling
+        this.stateManager.on("stateChange", this.onStateChange)
     }
 
     loop() {
@@ -118,6 +122,7 @@ export class Game {
 
     destroy() {
         // Remove event listeners
+        this.stateManager.off("stateChange", this.onStateChange)
         window.removeEventListener("resize", this.handleScreenResize)
 
         // Remove game objects
@@ -132,5 +137,12 @@ export class Game {
         // Disable and remove renderer
         this.renderer.dispose()
         this.container.removeChild(this.renderer.domElement)
+    }
+
+    // Event handling methods
+    private onStateChange = (state: GameState) => {
+        if (state === "playing" && this.player && this.player.isActive === false) {
+            this.player.setup()
+        }
     }
 }

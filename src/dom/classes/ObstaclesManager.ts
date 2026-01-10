@@ -1,6 +1,8 @@
 import type { Scene } from "three";
 import type { Player } from "./Player";
 import { Obstacle } from "./Obstacle";
+import { StateManager } from "../../state";
+import type { GameState } from "../../state/StateManager";
 
 const INTERVAL = 1 // seconds
 
@@ -11,7 +13,9 @@ export class ObstaclesManager {
     obstacles: Obstacle[] = []
     lastObPos: number = 0
     offset: number = 2
-    currentInterval: number = INTERVAL 
+    currentInterval: number = INTERVAL
+
+    pendingReset: boolean = false
 
     constructor(scene: Scene, player: Player) {
         this.scene = scene
@@ -20,6 +24,8 @@ export class ObstaclesManager {
 
     setup() {
         this.reset()
+
+        StateManager.getInstance().on("stateChange", this.onStateChange)
     }
 
     update(delta: number) {
@@ -46,10 +52,19 @@ export class ObstaclesManager {
 
             return true
         })
+
+        // Check for any reset request
+        if (this.pendingReset) {
+            this.reset()
+            this.pendingReset = false
+            return
+        }
     }
 
     destroy() {
         this.reset()
+
+        StateManager.getInstance().off("stateChange", this.onStateChange)
     }
 
     private spawnNextObstacle() {
@@ -75,10 +90,20 @@ export class ObstaclesManager {
         this.obstacles.push(obstacle)
     }
 
+    private initiateReset() {
+        this.pendingReset = true
+    }
+
     private reset() {
         this.currentInterval = INTERVAL
 
         this.obstacles.forEach(ob => ob.destroy())
         this.obstacles = []
+    }
+
+    private onStateChange = (state: GameState) => {
+        if (state !== "playing") {
+            this.initiateReset()
+        }
     }
 }

@@ -7,7 +7,7 @@ function App() {
     const gameRef = useRef<Game | null>(null)
     const gameContainerRef = useRef<HTMLDivElement>(null)
 
-    const gameState = useGameState()
+    const state = useGameState()
     const { startGame } = useGameControls()
 
     // Create game instance
@@ -36,9 +36,15 @@ function App() {
             />
 
             <div className="ui">
-                {gameState === "startMenu" && (
+                {state === "startMenu" && (
                     <div className="main-menu">
                         <button className="action-btn" onClick={startGame}>Start</button>
+                    </div>
+                )}
+
+                {state === "resultMenu" && (
+                    <div className="result-menu">
+                        <button className="action-btn" onClick={startGame}>Restart</button>
                     </div>
                 )}
             </div>
