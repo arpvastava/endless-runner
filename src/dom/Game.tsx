@@ -86,7 +86,7 @@ export class Game {
         this.camera.position.set(0, 2, 5)
 
         // Load audios and play bgm
-        this.audioManager.setup(this.camera)
+        await this.audioManager.setup(this.camera)
 
         // Create ground
         this.ground = new Ground(this.scene)
