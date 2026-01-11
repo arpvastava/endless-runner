@@ -55,6 +55,7 @@ export class Game {
 
         // Listen for events
         window.addEventListener("resize", this.handleScreenResize)
+        document.addEventListener("visibilitychange", this.handleVisibilityChange)
     }
 
     private handleScreenResize = () => {
@@ -68,6 +69,12 @@ export class Game {
         // Update renderer
         this.renderer.setSize(this.width, this.height)
         this.renderer.render(this.scene, this.camera)
+    }
+
+    private handleVisibilityChange = () => {
+        if (document.hidden && this.stateManager.getState() === "playing") {
+            this.stateManager.setState("paused")
+        }
     }
 
     private setupEnvironment() {
@@ -150,6 +157,7 @@ export class Game {
         // Remove event listeners
         this.stateManager.off("stateChange", this.onStateChange)
         window.removeEventListener("resize", this.handleScreenResize)
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange)
 
         // Remove game objects
         this.ground?.destroy()
