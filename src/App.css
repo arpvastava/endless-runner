@@ -130,7 +130,7 @@
     }
 }
 
-@media (min-aspect-ratio: 2/1) {
+@media (min-aspect-ratio: 2.5/1) {
     .action-btn {
         font-size: 3rem;
         margin-top: 32px;

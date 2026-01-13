@@ -49,7 +49,7 @@ export class Game {
         this.scene = new Scene()
 
         // Create renderer
-        this.renderer = new WebGLRenderer()
+        this.renderer = new WebGLRenderer({ antialias: true })
         this.renderer.setSize(this.width, this.height)
         this.container.appendChild(this.renderer.domElement)
 
@@ -207,7 +207,7 @@ export class Game {
         }
         // For portrait orientation
         else {
-            this.scene.fog = new FogExp2("#111111", 0.02)
+            this.scene.fog = new FogExp2("#111111", 0.04)
         }
     }
 }
